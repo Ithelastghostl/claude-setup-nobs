@@ -34,5 +34,11 @@ Evaluation agents run in parallel, blind to each other. Exactly one agent (the j
 ## 9. Grow by one file + one manifest line
 Adding an agent: write `<slug>.md` per this document, validate it against both parsers, add its slug to `MANIFEST`, update `index.md`'s routing table. The manifest is the propagation gate — an unlisted file never syncs to the repos, so nothing leaks by accident.
 
-## 10. Living files
+## 10. Adapters are generated, never authored
+Codex and Gemini adapters under `adapters/` are build artifacts of the canonical agent
+files, produced by `adapters/generate.ts` from the MANIFEST. Editing an agent means
+regenerating its adapters in the same change; hand-editing an adapter is a bug. One
+source of truth, N runtimes.
+
+## 11. Living files
 Every agent carries a `Last updated:` line in `# Context`. When an agent's method or contract changes, the date changes. Stale context degrades output silently — same rule as every other context file in this system.
