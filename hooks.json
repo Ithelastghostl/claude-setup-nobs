@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "JQ=$(command -v jq || echo /opt/homebrew/bin/jq); sid=$(\"$JQ\" -r \".session_id // empty\" 2>/dev/null); case \"$sid\" in \"\"|*[!A-Za-z0-9-]*) \"$JQ\" -n \"{hookSpecificOutput:{hookEventName:\\\"PreToolUse\\\",permissionDecision:\\\"deny\\\",permissionDecisionReason:\\\"Playback gate: missing or malformed session_id in hook input (configuration error).\\\"}}\"; exit 0;; esac; if [ -f \"$HOME/.claude/approvals/$sid\" ]; then exit 0; fi; \"$JQ\" -n --arg sid \"$sid\" \"{hookSpecificOutput:{hookEventName:\\\"PreToolUse\\\",permissionDecision:\\\"deny\\\",permissionDecisionReason:(\\\"Playback gate: no user approval recorded for this prompt. If the user explicitly approved the current Playback in chat, record it with: mkdir -p ~/.claude/approvals && touch ~/.claude/approvals/\\\" + \\$sid + \\\" . Otherwise present a Playback and wait.\\\")}}\"",
+            "statusMessage": "Playback gate check"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "IN=$(cat); JQ=$(command -v jq || echo /opt/homebrew/bin/jq); sid=$(printf \"%s\" \"$IN\" | \"$JQ\" -r \".session_id // empty\" 2>/dev/null); case \"$sid\" in \"\"|*[!A-Za-z0-9-]*) exit 0;; esac; p=$(printf \"%s\" \"$IN\" | \"$JQ\" -r \".prompt // empty\" 2>/dev/null); case \"$p\" in \"[SYSTEM NOTIFICATION\"*|*\"<task-notification>\"*) exit 0;; esac; f=\"$HOME/.claude/approvals/$sid\"; if [ -e \"$f\" ]; then rm -f -- \"$f\" || echo \"{\\\"systemMessage\\\":\\\"Playback gate: FAILED to clear approval flag - approval may carry over.\\\"}\"; fi; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}
