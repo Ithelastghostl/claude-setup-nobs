@@ -206,6 +206,23 @@ clean-state management in [Anthropic — Effective harnesses for long-running ag
 - **Auditability.** Handoffs, logs, and evidence mean any human or agent can pick up where
   the last one stopped.
 
+## Useful Subagents
+
+[`Useful Subagents/`](Useful%20Subagents/) is a small library of seven model-agnostic
+specialist subagents — an evaluation council (`contrarian`, `expansionist`,
+`first-principles`, `deep-researcher`, `buyer`, `council-judge`) plus an independent
+`verification-auditor` that stress-tests claimed-finished work. Each is one markdown file:
+frontmatter (`name`, single-line `description`, least-privilege `tools`) and a body layered
+as `# Instructions` (method + a mandatory structured output contract) / `# Data` (required
+inputs) / `# Context` (when to invoke). Uniform behavior across models comes from the
+output contracts, not from personality prose — the full authoring rules are in
+[`Useful Subagents/PRINCIPLES.md`](Useful%20Subagents/PRINCIPLES.md).
+
+To use them with Claude Code: copy the seven agent files into `~/.claude/agents/`, copy
+`index.md` to `~/.claude/USEFUL-SUBAGENTS.md` (a routing table your CLAUDE.md can point
+at), and keep `MANIFEST` as the propagation gate — only slugs listed there should ever
+sync between your live config and version control, so nothing leaks by accident.
+
 ## How to adopt it
 
 1. Copy `CLAUDE.md` and `WORKFLOW.md` into `~/.claude/` (or your project root for

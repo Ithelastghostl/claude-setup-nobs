@@ -32,6 +32,7 @@ iterate → execute). The Codex gate and verification are never skipped on compl
 | Searching beyond the current project, or locating an unknown machine resource (repo, deploy, DB, media, secrets) | `~/.claude/SYSTEM_INDEX.md` — skip if you already hold an exact path; on drift, update the index and its Verified date |
 | Entering Fix: backlog format, Codex gate, subagent models, coding rules, handoff spec | `~/.claude/WORKFLOW.md` |
 | Before acting on any task: lessons learned | `~/.claude/memory/MEMORY.md` (auto-loaded index) |
+| Delegating a subtask a specialist subagent covers (idea stress-test, upside sizing, assumption audit, market research, buyer test, done-audit) | `~/.claude/USEFUL-SUBAGENTS.md` — routing table + composition recipes |
 
 ## Non-negotiables
 
